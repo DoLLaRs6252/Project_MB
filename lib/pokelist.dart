@@ -30,11 +30,11 @@ class PokeListPageState extends State<PokeListPage> {
             'type2': jsonData['types'].length > 1
                 ? jsonData['types'][1]['type']['name']
                 : '',
-            'frontimageUrl': jsonData['sprites']['front_default'],
-            'backimageUrl': jsonData['sprites']['back_default'],
+            'front2imageUrl': jsonData['sprites']['front_default'],
+            'frontimageUrl': jsonData['sprites']['other']['official-artwork']['front_default'],
             'id': jsonData['id'],
-            'height': jsonData['height'],
-            'weight': jsonData['weight'],
+            'height': (jsonData['height'] * 10).toString() + ' Cm',
+            'weight': (jsonData['weight'] / 10 * 2.20462).toStringAsFixed(2) + ' lbs',
             'abilities': jsonData['abilities'][0]['ability']['name'],
             'hp': jsonData['stats'][0]['base_stat'],
             'attack': jsonData['stats'][1]['base_stat'],
@@ -99,7 +99,7 @@ class PokeListPageState extends State<PokeListPage> {
                                 ),
                               ),
                               height: 150,
-                              width: 350,
+                              width: 300,
                               child: Image.network(
                                 pokemon['frontimageUrl'],
                                 fit: BoxFit.fill,
@@ -110,10 +110,20 @@ class PokeListPageState extends State<PokeListPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16,0,8,16),
                       child: ListTile(
-                        title: Text(
-                          ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                             ' #${pokemon['id']}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         subtitle: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +133,7 @@ class PokeListPageState extends State<PokeListPage> {
                                   horizontal: 12.0,
                                   vertical: 4.0), // Add vertical padding
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
+                                borderRadius: BorderRadius.circular(16.0),
                                 color: Color.fromARGB(255, 191, 189, 189),
                               ),
                               child: Text(
@@ -144,7 +154,7 @@ class PokeListPageState extends State<PokeListPage> {
                                       horizontal: 12.0,
                                       vertical: 4.0), // Add vertical padding
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6.0),
+                                    borderRadius: BorderRadius.circular(16.0),
                                     color: Color.fromARGB(255, 191, 189, 189),
                                   ),
                                   child: Text(
