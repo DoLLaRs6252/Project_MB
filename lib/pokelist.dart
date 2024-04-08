@@ -17,51 +17,8 @@ class PokeListPageState extends State<PokeListPage> {
     fetchAllPokemonData();
   }
 
-  Color getTypeColor(String type) {
-    switch (type.toLowerCase()) {
-      case 'normal':
-        return Colors.brown;
-      case 'fire':
-        return Colors.red;
-      case 'water':
-        return Colors.blue;
-      case 'electric':
-        return Colors.amber;
-      case 'grass':
-        return Colors.green;
-      case 'ice':
-        return Colors.cyan;
-      case 'fighting':
-        return Colors.orange;
-      case 'poison':
-        return Colors.purple;
-      case 'ground':
-        return Colors.orangeAccent;
-      case 'flying':
-        return Colors.indigo;
-      case 'psychic':
-        return Colors.pink;
-      case 'bug':
-        return Colors.lightGreen;
-      case 'rock':
-        return Colors.grey;
-      case 'ghost':
-        return Colors.deepPurple;
-      case 'dragon':
-        return Colors.indigoAccent;
-      case 'dark':
-        return Colors.black87;
-      case 'steel':
-        return Colors.blueGrey;
-      case 'fairy':
-        return Colors.pinkAccent;
-      default:
-        return Colors.grey;
-    }
-  }
-
   Future<void> fetchAllPokemonData() async {
-    for (int i = 1; i <= 151; i++) {
+    for (int i = 1; i <= 300; i++) {
       final response =
           await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$i/'));
       if (response.statusCode == 200) {
@@ -73,7 +30,8 @@ class PokeListPageState extends State<PokeListPage> {
             'type2': jsonData['types'].length > 1
                 ? jsonData['types'][1]['type']['name']
                 : '',
-            'front2imageUrl': jsonData['sprites']['front_default'],
+            'front_shinyimageUrl': jsonData['sprites']['other']['official-artwork']
+                ['front_shiny'],
             'frontimageUrl': jsonData['sprites']['other']['official-artwork']
                 ['front_default'],
             'id': jsonData['id'],
@@ -99,7 +57,7 @@ class PokeListPageState extends State<PokeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PokeAPI Demo'),
+        title: Text('PokeDex'),
       ),
       backgroundColor: Color.fromARGB(255, 181, 181, 181),
       body: Container(
@@ -195,11 +153,11 @@ class PokeListPageState extends State<PokeListPage> {
                               if (pokemon['type2'].isNotEmpty)
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 4.0), // Add left padding
+                                      left: 4.0),
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 12.0,
-                                        vertical: 4.0), // Add vertical padding
+                                        vertical: 4.0), 
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16.0),
                                       color: getTypeColor(pokemon['type2']),
@@ -224,5 +182,47 @@ class PokeListPageState extends State<PokeListPage> {
         ),
       ),
     );
+  }
+  Color getTypeColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'normal':
+        return Colors.brown;
+      case 'fire':
+        return Colors.red;
+      case 'water':
+        return Colors.blue;
+      case 'electric':
+        return Colors.amber;
+      case 'grass':
+        return Colors.green;
+      case 'ice':
+        return Colors.cyan;
+      case 'fighting':
+        return Colors.orange;
+      case 'poison':
+        return Colors.purple;
+      case 'ground':
+        return Colors.orangeAccent;
+      case 'flying':
+        return Colors.indigo;
+      case 'psychic':
+        return Colors.pink;
+      case 'bug':
+        return Colors.lightGreen;
+      case 'rock':
+        return Colors.grey;
+      case 'ghost':
+        return Colors.deepPurple;
+      case 'dragon':
+        return Colors.indigoAccent;
+      case 'dark':
+        return Colors.black87;
+      case 'steel':
+        return Colors.blueGrey;
+      case 'fairy':
+        return Colors.pinkAccent;
+      default:
+        return Colors.grey;
+    }
   }
 }

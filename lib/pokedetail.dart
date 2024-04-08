@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
 
-class PokemonDetailScreen extends StatelessWidget {
+class PokemonDetailScreen extends StatefulWidget {
   final Map<String, dynamic> pokemon;
 
   PokemonDetailScreen({required this.pokemon});
+
+  @override
+  _PokemonDetailScreenState createState() => _PokemonDetailScreenState();
+}
+
+class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
+  bool _showFrontImage = true;
+
+  String getDisplayedImageUrl() {
+    return _showFrontImage
+        ? widget.pokemon['frontimageUrl']
+        : widget.pokemon['front_shinyimageUrl'];
+  }
+
+  void toggleImage() {
+    setState(() {
+      _showFrontImage = !_showFrontImage;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
+          ' ${widget.pokemon['name'].replaceFirst(widget.pokemon['name'][0], widget.pokemon['name'][0].toUpperCase())}',
         ),
       ),
       backgroundColor: Color.fromARGB(255, 181, 181, 181),
@@ -34,14 +53,14 @@ class PokemonDetailScreen extends StatelessWidget {
                     children: [
                       Container(
                         child: Text(
-                          ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
+                          ' ${widget.pokemon['name'].replaceFirst(widget.pokemon['name'][0], widget.pokemon['name'][0].toUpperCase())}',
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Container(
                         child: Text(
-                          ' id:#${pokemon['id']}',
+                          ' id:#${widget.pokemon['id']}',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
@@ -61,7 +80,7 @@ class PokemonDetailScreen extends StatelessWidget {
                       height: 450,
                       width: 425,
                       child: Image.network(
-                        pokemon['frontimageUrl'],
+                        getDisplayedImageUrl(),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -101,7 +120,7 @@ class PokemonDetailScreen extends StatelessWidget {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              '${pokemon['height']}',
+                                              '${widget.pokemon['height']}',
                                               style: TextStyle(fontSize: 18),
                                             )
                                           ],
@@ -119,7 +138,7 @@ class PokemonDetailScreen extends StatelessWidget {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              '${pokemon['weight']}',
+                                              '${widget.pokemon['weight']}',
                                               style: TextStyle(fontSize: 18),
                                             )
                                           ],
@@ -146,7 +165,7 @@ class PokemonDetailScreen extends StatelessWidget {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              '${pokemon['abilities']}',
+                                              '${widget.pokemon['abilities']}',
                                               style: TextStyle(fontSize: 18),
                                             ),
                                           ]),
@@ -169,35 +188,51 @@ class PokemonDetailScreen extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 48.0, vertical: 4.0),
                                 decoration: BoxDecoration(
-                                  color: getTypeColor(pokemon['type1']),
+                                  color: getTypeColor(widget.pokemon['type1']),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  '${pokemon['type1']}',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
+                                  '${widget.pokemon['type1']}',
+                                  style: TextStyle(fontSize: 18,color: Colors.white,),
                                 ),
                               ),
-                              if (pokemon['type2'].isNotEmpty)
+                              if (widget.pokemon['type2'].isNotEmpty)
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 48.0, vertical: 4.0),
                                   decoration: BoxDecoration(
-                                    color: getTypeColor(pokemon['type2']),
+                                    color: getTypeColor(widget.pokemon['type2']),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
-                                    '${pokemon['type2']}',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255)),
+                                    '${widget.pokemon['type2']}',
+                                    style: TextStyle(fontSize: 18,color: Colors.white,),
                                   ),
                                 ),
                             ],
                           ),
+                        ),
+                        SizedBox(height:40 ,),
+                        ElevatedButton(
+                          onPressed: toggleImage,
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue, // Background color
+                            onPrimary: Colors.white, // Text color
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 24.0), // Button padding
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Button border radius
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 18.0, // Text size
+                              fontWeight: FontWeight.bold, // Text weight
+                            ),
+                          ),
+                          child: Text(_showFrontImage
+                              ? 'Show Shiny Version'
+                              : 'Show Regular Version'),
                         ),
                       ],
                     ),
@@ -225,15 +260,15 @@ class PokemonDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'HP: ${pokemon['hp']}',
+                              'HP: ${widget.pokemon['hp']}',
                               style: TextStyle(fontSize: 18),
                             ),
                             Text(
-                              'Attack: ${pokemon['attack']}',
+                              'Attack: ${widget.pokemon['attack']}',
                               style: TextStyle(fontSize: 18),
                             ),
                             Text(
-                              'Defense: ${pokemon['defense']}',
+                              'Defense: ${widget.pokemon['defense']}',
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
@@ -243,21 +278,22 @@ class PokemonDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Special Attack: ${pokemon['specialAttack']}',
+                              'Special Attack: ${widget.pokemon['specialAttack']}',
                               style: TextStyle(fontSize: 18),
                             ),
                             Text(
-                              'Special Defense: ${pokemon['specialDefense']}',
+                              'Special Defense: ${widget.pokemon['specialDefense']}',
                               style: TextStyle(fontSize: 18),
                             ),
                             Text(
-                              'Speed: ${pokemon['speed']}',
+                              'Speed: ${widget.pokemon['speed']}',
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
                         )
                       ],
                     )),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -265,7 +301,6 @@ class PokemonDetailScreen extends StatelessWidget {
       ),
     );
   }
-
   Color getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'normal':
