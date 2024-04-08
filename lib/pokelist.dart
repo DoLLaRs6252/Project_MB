@@ -17,6 +17,49 @@ class PokeListPageState extends State<PokeListPage> {
     fetchAllPokemonData();
   }
 
+  Color getTypeColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'normal':
+        return Colors.brown;
+      case 'fire':
+        return Colors.red;
+      case 'water':
+        return Colors.blue;
+      case 'electric':
+        return Colors.amber;
+      case 'grass':
+        return Colors.green;
+      case 'ice':
+        return Colors.cyan;
+      case 'fighting':
+        return Colors.orange;
+      case 'poison':
+        return Colors.purple;
+      case 'ground':
+        return Colors.orangeAccent;
+      case 'flying':
+        return Colors.indigo;
+      case 'psychic':
+        return Colors.pink;
+      case 'bug':
+        return Colors.lightGreen;
+      case 'rock':
+        return Colors.grey;
+      case 'ghost':
+        return Colors.deepPurple;
+      case 'dragon':
+        return Colors.indigoAccent;
+      case 'dark':
+        return Colors.black87;
+      case 'steel':
+        return Colors.blueGrey;
+      case 'fairy':
+        return Colors.pinkAccent;
+      default:
+        return Colors.grey;
+    }
+  }
+
   Future<void> fetchAllPokemonData() async {
     for (int i = 1; i <= 151; i++) {
       final response =
@@ -31,10 +74,12 @@ class PokeListPageState extends State<PokeListPage> {
                 ? jsonData['types'][1]['type']['name']
                 : '',
             'front2imageUrl': jsonData['sprites']['front_default'],
-            'frontimageUrl': jsonData['sprites']['other']['official-artwork']['front_default'],
+            'frontimageUrl': jsonData['sprites']['other']['official-artwork']
+                ['front_default'],
             'id': jsonData['id'],
             'height': (jsonData['height'] * 10).toString() + ' Cm',
-            'weight': (jsonData['weight'] / 10 * 2.20462).toStringAsFixed(2) + ' lbs',
+            'weight':
+                (jsonData['weight'] / 10 * 2.20462).toStringAsFixed(2) + ' lbs',
             'abilities': jsonData['abilities'][0]['ability']['name'],
             'hp': jsonData['stats'][0]['base_stat'],
             'attack': jsonData['stats'][1]['base_stat'],
@@ -57,124 +102,125 @@ class PokeListPageState extends State<PokeListPage> {
         title: Text('PokeAPI Demo'),
       ),
       backgroundColor: Color.fromARGB(255, 181, 181, 181),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 100.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 4.0,
-            mainAxisSpacing: 4.0,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/BG_pattern.png'),
+            fit: BoxFit.cover,
           ),
-          itemCount: _pokemonList.length,
-          itemBuilder: (context, index) {
-            final pokemon = _pokemonList[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PokemonDetailScreen(pokemon: pokemon),
-                  ),
-                );
-              },
-              child: Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: pokemon['frontimageUrl'].isNotEmpty
-                          ? Container(
-                              margin: EdgeInsets.fromLTRB(24,24,24,0),
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 210, 210, 210),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(
-                                      8.0), 
-                                  bottom: Radius.circular(
-                                      8.0), 
-                                ),
-                              ),
-                              height: 150,
-                              width: 300,
-                              child: Image.network(
-                                pokemon['frontimageUrl'],
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                          : CircularProgressIndicator(), // Display loading indicator if image is not loaded yet
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 100.0),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 4.0,
+              mainAxisSpacing: 4.0,
+            ),
+            itemCount: _pokemonList.length,
+            itemBuilder: (context, index) {
+              final pokemon = _pokemonList[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PokemonDetailScreen(pokemon: pokemon),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16,0,8,16),
-                      child: ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                             ' #${pokemon['id']}',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        subtitle: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 4.0), // Add vertical padding
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.0),
-                                color: Color.fromARGB(255, 191, 189, 189),
-                              ),
-                              child: Text(
-                                ' ${pokemon['type1']}',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors
-                                        .white), // Adjust font size and color
-                              ),
-                            ),
-                            if (pokemon['type2']
-                                .isNotEmpty) // Display Type 2 only if available
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 4.0), // Add left padding
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 4.0), // Add vertical padding
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color: Color.fromARGB(255, 191, 189, 189),
-                                  ),
-                                  child: Text(
-                                    ' ${pokemon['type2']}',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors
-                                            .white), // Adjust font size and color
+                  );
+                },
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: pokemon['frontimageUrl'].isNotEmpty
+                            ? Container(
+                                margin: EdgeInsets.fromLTRB(24, 24, 24, 0),
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 210, 210, 210),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(8.0),
+                                    bottom: Radius.circular(8.0),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
+                                height: 150,
+                                width: 300,
+                                child: Image.network(
+                                  pokemon['frontimageUrl'],
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                            : CircularProgressIndicator(),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 8, 16),
+                        child: ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                ' ${pokemon['name'].replaceFirst(pokemon['name'][0], pokemon['name'][0].toUpperCase())}',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                ' #${pokemon['id']}',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          subtitle: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 4.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color: getTypeColor(pokemon['type1']),
+                                ),
+                                child: Text(
+                                  ' ${pokemon['type1']}',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.white),
+                                ),
+                              ),
+                              if (pokemon['type2'].isNotEmpty)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 4.0), // Add left padding
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 4.0), // Add vertical padding
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: getTypeColor(pokemon['type2']),
+                                    ),
+                                    child: Text(
+                                      ' ${pokemon['type2']}',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
